@@ -7,6 +7,7 @@
 #include <juce_audio_devices/juce_audio_devices.h>
 
 #include "effects/bypassable_effect.h"
+#include "effects/peak_meter.h"
 #include "effects/pitch_shifter.h"
 #include "effects/ring_mod_robot.h"
 
@@ -30,7 +31,9 @@ class AudioEngine final : public juce::AudioIODeviceCallback {
   BypassableEffect& pitch_shifter_bypass() { return pitch_shifter_bypass_; }
   BypassableEffect& robot_bypass() { return robot_bypass_; }
 
-  int EffectLatencySamples() const;
+  // Peak levels before and after the effect chain.
+  PeakMeter& input_meter() { return input_meter_; }
+  PeakMeter& output_meter() { return output_meter_; }
 
   void audioDeviceIOCallbackWithContext(
       const float* const* input_channel_data, int num_input_channels,
@@ -47,6 +50,8 @@ class AudioEngine final : public juce::AudioIODeviceCallback {
   BypassableEffect pitch_shifter_bypass_{pitch_shifter_};
   BypassableEffect robot_bypass_{robot_};
   const std::array<Effect*, 2> chain_{&pitch_shifter_bypass_, &robot_bypass_};
+  PeakMeter input_meter_;
+  PeakMeter output_meter_;
   std::vector<float> mono_;
 
   juce::AudioDeviceManager device_manager_;

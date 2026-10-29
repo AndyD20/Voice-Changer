@@ -37,12 +37,6 @@ AudioEngine::AudioEngine() {
 
 AudioEngine::~AudioEngine() { device_manager_.removeAudioCallback(this); }
 
-int AudioEngine::EffectLatencySamples() const {
-  int latency = 0;
-  for (const Effect* effect : chain_) latency += effect->LatencySamples();
-  return latency;
-}
-
 // Real-time safe: no allocation, locking or blocking.
 void AudioEngine::audioDeviceIOCallbackWithContext(
     const float* const* input_channel_data, int num_input_channels,
@@ -67,7 +61,9 @@ void AudioEngine::audioDeviceIOCallbackWithContext(
       std::fill_n(mono_.data(), block, 0.0f);
     }
 
+    input_meter_.Process(mono_.data(), block);
     for (Effect* effect : chain_) effect->Process(mono_.data(), block);
+    output_meter_.Process(mono_.data(), block);
 
     // The processed mono signal is copied to every output channel.
     for (int channel = 0; channel < num_output_channels; ++channel) {

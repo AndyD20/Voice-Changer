@@ -17,7 +17,7 @@ class MainWindow final : public juce::DocumentWindow {
                            .findColour(juce::ResizableWindow::backgroundColourId),
                        DocumentWindow::allButtons) {
     setUsingNativeTitleBar(true);
-    setContentOwned(new MainComponent(engine.device_manager()), true);
+    setContentOwned(new MainComponent(engine), true);
     setResizable(true, true);
     centreWithSize(getWidth(), getHeight());
     setVisible(true);

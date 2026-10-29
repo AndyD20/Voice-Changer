@@ -51,8 +51,12 @@ CMakeLists.txt
 src/
   main.cc
   main_component.*       # GUI root
+  effects_panel.*        # per-effect sliders and toggles
+  level_meter.*          # input/output meter component
+  preset_bar.*           # preset picker, save and delete
   audio_engine.*         # device management, audio callback, effect chain
   effects/
+    peak_meter.h         # lock-free peak level, audio thread -> GUI
     effect.h             # common interface: Prepare(), Process(), Reset()
     bypassable_effect.*  # click-free bypass wrapper for any effect
     linear_smoother.h    # parameter smoothing (JUCE-free)
@@ -101,7 +105,7 @@ Default test mode to headphones and show a warning, since monitoring over speake
 ## Milestones
 
 - [x] CMake + JUCE skeleton, window opens, device selection works, audio passes through unmodified
-- [ ] Effect interface, pitch shifter, ring-mod robot, atomic parameters, bypasses
+- [x] Effect interface, pitch shifter, ring-mod robot, atomic parameters, bypasses
 - [ ] GUI controls, level meters, presets
 - [ ] Test mode (phase 1), then verify Discord picks up the virtual cable correctly on Windows 11
 - [ ] Latency measurement and tuning

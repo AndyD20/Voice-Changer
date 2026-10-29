@@ -56,8 +56,12 @@ juce_add_gui_app(VoiceChanger
 target_sources(VoiceChanger
   PRIVATE
     src/audio_engine.cc
+    src/effects_panel.cc
+    src/level_meter.cc
     src/main.cc
-    src/main_component.cc)
+    src/main_component.cc
+    src/preset_bar.cc
+    src/presets.cc)
 
 target_compile_definitions(VoiceChanger
   PRIVATE
@@ -94,6 +98,7 @@ if(VOICE_CHANGER_BUILD_TESTS)
     tests/allocation_counter_test.cc
     tests/bypassable_effect_test.cc
     tests/linear_smoother_test.cc
+    tests/peak_meter_test.cc
     tests/pitch_shifter_test.cc
     tests/ring_mod_robot_test.cc)
 

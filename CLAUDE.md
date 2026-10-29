@@ -54,11 +54,14 @@ src/
   audio_engine.*         # device management, audio callback, effect chain
   effects/
     effect.h             # common interface: Prepare(), Process(), Reset()
+    bypassable_effect.*  # click-free bypass wrapper for any effect
+    linear_smoother.h    # parameter smoothing (JUCE-free)
     pitch_shifter.*      # wraps Signalsmith Stretch
     ring_mod_robot.*
   presets.*              # JSON load/save (see Decisions for storage location)
                          # third-party deps (JUCE, Signalsmith Stretch) come
                          # from FetchContent, pinned by URL + SHA256
+tests/                   # GoogleTest; effects only, no JUCE
 docs/
 ```
 
@@ -97,14 +100,14 @@ Default test mode to headphones and show a warning, since monitoring over speake
 
 ## Milestones
 
-1. CMake + JUCE skeleton, window opens, device selection works, audio passes through unmodified
-2. Effect interface, pitch shifter, ring-mod robot, atomic parameters, bypasses
-3. GUI controls, level meters, presets
-4. Test mode (phase 1), then verify Discord picks up the virtual cable correctly on Windows 11
-5. Latency measurement and tuning
-6. Linux build and PipeWire/PulseAudio setup docs
-7. Test mode phase 2 (simultaneous monitoring with drift compensation)
-8. Optional: VST3/CLAP plugin hosting so users can load their own effects
+- [x] CMake + JUCE skeleton, window opens, device selection works, audio passes through unmodified
+- [ ] Effect interface, pitch shifter, ring-mod robot, atomic parameters, bypasses
+- [ ] GUI controls, level meters, presets
+- [ ] Test mode (phase 1), then verify Discord picks up the virtual cable correctly on Windows 11
+- [ ] Latency measurement and tuning
+- [ ] Linux build and PipeWire/PulseAudio setup docs
+- [ ] Test mode phase 2 (simultaneous monitoring with drift compensation)
+- [ ] Optional: VST3/CLAP plugin hosting so users can load their own effects
 
 ## Out of scope for now
 

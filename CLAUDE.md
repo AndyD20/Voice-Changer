@@ -116,6 +116,9 @@ Default test mode to headphones and show a warning, since monitoring over speake
 - Add unit tests for effect processing (e.g. offline processing of known buffers)
 - Keep the build reproducible: pin third-party versions
 - When adding any code that runs in the audio callback, state in a comment that it is real-time safe
+- Code and functionality should be developed using SOLID principles as much as possible. Along with a KISS philosophy (Keep It Simple, Stupid).
+- Code should not be overly commented, only where it might be unclear upon reading it what the code is doing.
+- C++ should be written adhering to Google's C++ styling guide (https://google.github.io/styleguide/cppguide.html). The code must be neat, succinct and clear.
 
 ## Decisions
 

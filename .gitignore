@@ -33,3 +33,7 @@
 
 # JetBrains specific stuff
 .idea
+
+# Build output
+build/
+cmake-build-*/

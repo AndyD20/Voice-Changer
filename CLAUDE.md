@@ -49,15 +49,16 @@ Mic -> [audio thread: effect chain] -> output device (virtual cable, or headphon
 ```
 CMakeLists.txt
 src/
-  Main.cpp
-  MainComponent.*        # GUI root
-  AudioEngine.*          # device management, audio callback, effect chain
+  main.cc
+  main_component.*       # GUI root
+  audio_engine.*         # device management, audio callback, effect chain
   effects/
-    Effect.h             # common interface: prepare(), process(), reset()
-    PitchShifter.*       # wraps Signalsmith Stretch
-    RingModRobot.*
-  Presets.*              # JSON load/save (see Decisions for storage location)
-third_party/             # JUCE, Signalsmith Stretch (submodules or FetchContent)
+    effect.h             # common interface: Prepare(), Process(), Reset()
+    pitch_shifter.*      # wraps Signalsmith Stretch
+    ring_mod_robot.*
+  presets.*              # JSON load/save (see Decisions for storage location)
+                         # third-party deps (JUCE, Signalsmith Stretch) come
+                         # from FetchContent, pinned by URL + SHA256
 docs/
 ```
 

@@ -7,6 +7,7 @@
 #include <juce_audio_devices/juce_audio_devices.h>
 
 #include "effects/bypassable_effect.h"
+#include "effects/monitor_mixer.h"
 #include "effects/peak_meter.h"
 #include "effects/pitch_shifter.h"
 #include "effects/ring_mod_robot.h"
@@ -35,6 +36,9 @@ class AudioEngine final : public juce::AudioIODeviceCallback {
   PeakMeter& input_meter() { return input_meter_; }
   PeakMeter& output_meter() { return output_meter_; }
 
+  // Chooses whether the raw input, the processed output, or both are heard.
+  MonitorMixer& monitor_mixer() { return monitor_mixer_; }
+
   void audioDeviceIOCallbackWithContext(
       const float* const* input_channel_data, int num_input_channels,
       float* const* output_channel_data, int num_output_channels,
@@ -52,6 +56,8 @@ class AudioEngine final : public juce::AudioIODeviceCallback {
   const std::array<Effect*, 2> chain_{&pitch_shifter_bypass_, &robot_bypass_};
   PeakMeter input_meter_;
   PeakMeter output_meter_;
+  MonitorMixer monitor_mixer_;
+  std::vector<float> dry_;
   std::vector<float> mono_;
 
   juce::AudioDeviceManager device_manager_;

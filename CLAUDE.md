@@ -57,6 +57,7 @@ src/
   audio_engine.*         # device management, audio callback, effect chain
   effects/
     peak_meter.h         # lock-free peak level, audio thread -> GUI
+    monitor_mixer.*      # click-free mix of raw input and processed output
     effect.h             # common interface: Prepare(), Process(), Reset()
     bypassable_effect.*  # click-free bypass wrapper for any effect
     linear_smoother.h    # parameter smoothing (JUCE-free)
@@ -106,7 +107,7 @@ Default test mode to headphones and show a warning, since monitoring over speake
 
 - [x] CMake + JUCE skeleton, window opens, device selection works, audio passes through unmodified
 - [x] Effect interface, pitch shifter, ring-mod robot, atomic parameters, bypasses
-- [ ] GUI controls, level meters, presets
+- [x] GUI controls, level meters, presets
 - [ ] Test mode (phase 1), then verify Discord picks up the virtual cable correctly on Windows 11
 - [ ] Latency measurement and tuning
 - [ ] Linux build and PipeWire/PulseAudio setup docs

@@ -30,8 +30,10 @@ class MainComponent final : public juce::Component {
   PresetBar preset_bar_;
   LevelMeter input_meter_{engine_.input_meter()};
   juce::Label input_label_{{}, "Input"};
+  juce::ToggleButton listen_to_input_{"Listen"};
   LevelMeter output_meter_{engine_.output_meter()};
   juce::Label output_label_{{}, "Output"};
+  juce::ToggleButton listen_to_output_{"Listen"};
   juce::Label feedback_warning_;
   juce::TextButton audio_settings_button_{"Audio Settings..."};
   juce::Component::SafePointer<juce::DialogWindow> audio_settings_window_;

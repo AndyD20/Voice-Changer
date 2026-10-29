@@ -56,16 +56,18 @@ void AudioEngine::audioDeviceIOCallbackWithContext(
     const int block = std::min(max_block, num_samples - start);
 
     if (input != nullptr) {
-      std::copy_n(input + start, block, mono_.data());
+      std::copy_n(input + start, block, dry_.data());
     } else {
-      std::fill_n(mono_.data(), block, 0.0f);
+      std::fill_n(dry_.data(), block, 0.0f);
     }
+    std::copy_n(dry_.data(), block, mono_.data());
 
-    input_meter_.Process(mono_.data(), block);
+    input_meter_.Process(dry_.data(), block);
     for (Effect* effect : chain_) effect->Process(mono_.data(), block);
     output_meter_.Process(mono_.data(), block);
+    monitor_mixer_.Process(dry_.data(), mono_.data(), block);
 
-    // The processed mono signal is copied to every output channel.
+    // The mono mix is copied to every output channel.
     for (int channel = 0; channel < num_output_channels; ++channel) {
       if (output_channel_data[channel] != nullptr) {
         std::copy_n(mono_.data(), block, output_channel_data[channel] + start);
@@ -78,8 +80,10 @@ void AudioEngine::audioDeviceAboutToStart(juce::AudioIODevice* device) {
   const double sample_rate = device->getCurrentSampleRate();
   const int block_size = device->getCurrentBufferSizeSamples();
 
+  dry_.assign(static_cast<size_t>(block_size), 0.0f);
   mono_.assign(static_cast<size_t>(block_size), 0.0f);
   for (Effect* effect : chain_) effect->Prepare(sample_rate, block_size);
+  monitor_mixer_.Prepare(sample_rate);
 }
 
 void AudioEngine::audioDeviceStopped() {}

@@ -12,8 +12,8 @@ constexpr int kMargin = 12;
 constexpr int kGap = 8;
 constexpr int kRowHeight = 28;
 constexpr int kMeterHeight = 14;
-constexpr int kMeterGap = 8;
 constexpr int kLabelWidth = 80;
+constexpr int kListenWidth = 80;
 constexpr int kWarningHeight = 24;
 constexpr int kSettingsButtonWidth = 140;
 constexpr int kSettingsWidth = 500;
@@ -21,8 +21,16 @@ constexpr int kSettingsHeight = 420;
 
 int PreferredHeight() {
   return 2 * kMargin + kRowHeight + kGap + EffectsPanel::PreferredHeight() +
-         kGap + 2 * kMeterHeight + kMeterGap + kGap + kWarningHeight + kGap +
-         kRowHeight;
+         kGap + 2 * kRowHeight + kGap + kWarningHeight + kGap + kRowHeight;
+}
+
+// Lays out a meter row: attached label, meter bar, then the listen toggle.
+void LayOutMeterRow(juce::Rectangle<int> row, LevelMeter& meter,
+                    juce::ToggleButton& listen) {
+  listen.setBounds(row.removeFromRight(kListenWidth));
+  row.removeFromRight(kGap);
+  const auto bar = row.withTrimmedLeft(kLabelWidth);
+  meter.setBounds(bar.withSizeKeepingCentre(bar.getWidth(), kMeterHeight));
 }
 
 }  // namespace
@@ -40,10 +48,24 @@ MainComponent::MainComponent(AudioEngine& engine)
   feedback_warning_.setColour(juce::Label::textColourId, juce::Colours::orange);
   audio_settings_button_.onClick = [this] { ShowAudioSettings(); };
 
+  MonitorMixer& mixer = engine_.monitor_mixer();
+  listen_to_input_.setToggleState(mixer.IsInputEnabled(),
+                                  juce::dontSendNotification);
+  listen_to_output_.setToggleState(mixer.IsOutputEnabled(),
+                                   juce::dontSendNotification);
+  listen_to_input_.onClick = [this, &mixer] {
+    mixer.SetInputEnabled(listen_to_input_.getToggleState());
+  };
+  listen_to_output_.onClick = [this, &mixer] {
+    mixer.SetOutputEnabled(listen_to_output_.getToggleState());
+  };
+
   addAndMakeVisible(preset_bar_);
   addAndMakeVisible(effects_panel_);
   addAndMakeVisible(input_meter_);
+  addAndMakeVisible(listen_to_input_);
   addAndMakeVisible(output_meter_);
+  addAndMakeVisible(listen_to_output_);
   addAndMakeVisible(feedback_warning_);
   addAndMakeVisible(audio_settings_button_);
   setSize(kWidth, PreferredHeight());
@@ -64,11 +86,10 @@ void MainComponent::resized() {
   bounds.removeFromTop(kGap);
   effects_panel_.setBounds(bounds.removeFromTop(EffectsPanel::PreferredHeight()));
   bounds.removeFromTop(kGap);
-  input_meter_.setBounds(
-      bounds.removeFromTop(kMeterHeight).withTrimmedLeft(kLabelWidth));
-  bounds.removeFromTop(kMeterGap);
-  output_meter_.setBounds(
-      bounds.removeFromTop(kMeterHeight).withTrimmedLeft(kLabelWidth));
+  LayOutMeterRow(bounds.removeFromTop(kRowHeight), input_meter_,
+                 listen_to_input_);
+  LayOutMeterRow(bounds.removeFromTop(kRowHeight), output_meter_,
+                 listen_to_output_);
   bounds.removeFromTop(kGap);
   feedback_warning_.setBounds(bounds.removeFromTop(kWarningHeight));
   bounds.removeFromTop(kGap);

@@ -37,6 +37,7 @@ FetchContent_MakeAvailable(juce signalsmith-linear signalsmith-stretch)
 # Effects are plain C++ with no JUCE dependency, so they test standalone.
 add_library(voice_changer_effects STATIC
   src/effects/bypassable_effect.cc
+  src/effects/monitor_mixer.cc
   src/effects/pitch_shifter.cc
   src/effects/ring_mod_robot.cc)
 
@@ -98,6 +99,7 @@ if(VOICE_CHANGER_BUILD_TESTS)
     tests/allocation_counter_test.cc
     tests/bypassable_effect_test.cc
     tests/linear_smoother_test.cc
+    tests/monitor_mixer_test.cc
     tests/peak_meter_test.cc
     tests/pitch_shifter_test.cc
     tests/ring_mod_robot_test.cc)
